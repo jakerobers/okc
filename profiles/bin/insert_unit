@@ -1,0 +1,49 @@
+#!/usr/bin/env node
+
+const { insertUnit, init } = require('../db')
+const unitSchema = require('../unitSchema');
+
+// TODO: allow user input for following fields
+const unit = {
+  address: '',
+  sqft: '900',
+  bed: '2',
+  bath: '1',
+  dryerHookup: 'gas and electric',
+  hvacDetails: 'central air',
+  parking: '2 spaces in garage + street parking',
+  rentAmount: '$895',
+  securityDepositAmount: '$895',
+  dogRentFee: '$20',
+  catRentFee: '$20',
+  birdRentFee: '$20',
+  totalNumberOfPetsAllowed: '2',
+  petPolicy: 'Our pet policy is as follows. Pets are allowed on a case by case basis at our discretion. If we allow a pet to be kept, there will be a rent adjustment made in the amount of an additional $25.00/month per pet. No more than (2) pets will be allowed. Under no circumstances will a dog designated as a vicious breed by the insurance industry be allowed. Our insurance carrier will not allow it. THIS INCLUDES ANY PITBULL MIXES.',
+  electricPaidBy: 'tenant',
+  heatPaidBy: 'tenant',
+  waterSewerPaidBy: 'landlord',
+  hotWaterPaidBy: 'tenant',
+  lawncareResponsibility: 'tenant',
+  snowRemovalResponsibility: 'tenant',
+  garageCode: '2173',
+  furnaceFilterSize: '16x25x1',
+}
+
+unit.createdAt = new Date();
+unit.updatedAt = new Date();
+
+const result = unitSchema.validate(unit)
+if (result.error) {
+  console.error('error validating unit', result.error);
+  return;
+}
+
+init().then(() => {
+  insertUnit(unit)
+    .then(() => {
+      console.info('Saved!');
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+});
